@@ -1,0 +1,168 @@
+{% load django_template_maths %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<title>Hello, world!</title>
+	<style>
+		.cards
+		{
+			display: flex;
+		}
+		.price 
+		{
+			display: flex;
+			
+		}
+		.price h1{
+			margin-right: 180px;
+		}
+		.prev-close{
+			display: flex;
+			flex-direction: column;
+		}
+		.from-item
+		{
+			display:flex;
+			margin-top: 3px;
+			
+		}
+		.from-item button{
+			height: 35px;
+			margin-top: 8px;
+		}
+		
+		.low-high .data{
+			display: flex;
+			justify-content: space-between;
+			font-weight: bold;
+		}
+		.low-high .line
+		{
+			display: flex;
+			justify-content: space-evenly;
+			
+		}
+		.low-high .line .hrline{
+			flex-grow: 8;
+			
+		}
+		.low-high .line .hrline hr{
+			font-size: 50px;
+			width: 50px;
+
+		}
+	</style>
+  </head>
+  <body>
+	
+	
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">Stock Market & Companies </a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		  <ul class="navbar-nav ml-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="">Charts</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="{% url 'logoutPage' %}">Logout</a>
+			</li>
+		  </ul>
+		</div>
+	  </nav>
+
+	  <form action="" method="POST" class="from-item"> {% csrf_token %}
+	  <div class="form-group col-md-4 mt-2" onchange="getData()" >
+		<select id="inputState" class="form-control" name="drop" >
+		  <option selected value="NSE">NSE</option>
+		  <option value="BSE">BSE</option>
+		</select>
+	  </div>
+	  <button type="submit" class="btn btn-dark">Submit</button>
+	</form>
+
+		{% if company %}
+	  <div class="cards">
+		<div class="card border-dark  mb-3 mt-2 mx-4" >
+			
+			<div class="card-body text-dark">
+				<h5 class="card-title">{{company}}</h5>
+				<p class="card-text">{{type}}</p>
+				<div class="price">
+					<h1>{{latest|add_decimal:2|separator:'comma'}}</h1>
+					<div class="prev-close">
+						<p>Prev close</p>
+						<h6>{{prev|add_decimal:2|separator:'comma'}}</h6>
+					</div>
+				</div>
+				
+			</div>
+			<div class="card-footer bg-dark "></div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="design">
+			<div class="row">
+				<h1>{{type}}</h1>
+			</div>
+			<hr style="border:2px solid gray">	
+			<div class="row">
+				<div class="col-lg-6">
+					<h1>{{latest}}</h1>
+					{% if latest > prev %}
+					<h5 class="text-success"><i class="fa fa-caret-up"></i>{{ diff|add_decimal:2 }}({{percent|add_decimal:2}}%)</h5>
+					{% else %}
+					<h5 class="text-danger"><i class="fa fa-caret-down"></i>{{ diff|add_decimal:2 }}({{percent|add_decimal:2}}%)</h5>
+					{% endif %}
+				</div>
+				<div class="col-lg-6">
+					<div class="range">
+						<div class="day-range">
+							<p>Day Range</p>
+							<div class="low-high">
+								<div class="data">
+									<p>{{low|add_decimal:2}}</p>
+									<p>{{high|add_decimal:2}}</p>
+								</div>
+								<div class="line">
+									<p>L</p>
+									<p class="hrline"></p>
+									<p>H</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<hr style="border-top: 1px dashed gray;">
+			<div class="row">
+				<hr style="border-top:1px solid black"> 
+				<p>Overview</p>
+			</div>
+			<div class="row"></div>
+		</div>
+	</div>
+	{% endif %}
+
+    <!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	
+	
+		
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
